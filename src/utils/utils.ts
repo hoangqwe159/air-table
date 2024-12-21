@@ -21,3 +21,6 @@ export function stringToColor(string: string) {
 
   return color;
 }
+
+export const EMPTY_LIST = [];
+export const EMPTY_OBJECT = {};
