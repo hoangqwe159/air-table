@@ -31,7 +31,7 @@ export default function TableNavigation() {
   }
 
   return (
-    <Box className="table-navigation flex flex-row gap-2 w-full">
+    <Box className="table-navigation flex flex-row gap-2">
       {tables.map((table) => (
         <TableMenuItem key={table.id} table={table} />
       ))}

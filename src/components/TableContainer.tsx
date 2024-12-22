@@ -1,55 +1,42 @@
 import { Box } from "@mui/material";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  OnChangeFn,
-  Row,
-  SortingState,
+  type OnChangeFn,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  keepPreviousData,
-  QueryClient,
-  QueryClientProvider,
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { fetchTableData, Person, PersonApiResponse } from "@/utils/mock";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { fetchTableData, type Person, type PersonApiResponse } from "@/utils/mock";
 import { useSelector } from "react-redux";
 import { selectSelectedTable } from "@/store/reducers/menuSlice";
 import '@/styles/table.css';
-import { EMPTY_LIST } from "@/utils/utils";
+import { useTableContext } from "@/context/TableContext";
 
 export const fetchSize = 50;
 
+const SEPARATOR = "$%^$%^";
+
 export default function TableContainer() {
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const [sorting, setSorting] = useState<SortingState>([]);
 
+  const { setColumns, sortingState: sorting, setSortingState: setSorting, filterState: filter } = useTableContext();
   const selectedTableId = useSelector(selectSelectedTable);
-
-  const columns = useMemo<ColumnDef<Person>[]>(
-    () => [
-      { header: "First Name", accessorKey: "firstName", size: 150 },
-      { header: "Last Name", accessorKey: "lastName", size: 150 },
-      { header: "Age", accessorKey: "age", size: 80 },
-      { header: "Email", accessorKey: "email", size: 300 },
-      { header: "Phone", accessorKey: "phone", size: 300 },
-      { header: "City", accessorKey: "city", size: 150 },
-    ],
-    [],
-  );
 
   const { data, fetchNextPage, isFetching, isLoading } = useInfiniteQuery<
     PersonApiResponse
   >({
     queryKey: [
-      "people",
+      "tableData",
       selectedTableId, //refetch when selected table changes
       sorting, //refetch when sorting changes
+      filter, //refetch when filter changes
     ],
     queryFn: async ({ pageParam = 0 }) => {
       const start = (pageParam as number) * fetchSize;
@@ -58,6 +45,7 @@ export default function TableContainer() {
         start,
         fetchSize,
         sorting,
+        filter,
       );
       return fetchedData;
     },
@@ -66,6 +54,33 @@ export default function TableContainer() {
     refetchOnWindowFocus: false,
     enabled: !!selectedTableId,
   });
+
+  const columnsString = useMemo(() => {
+    if (!data) return "";
+
+    const firstRow = data.pages[0]?.data[0];
+    if (!firstRow) return "";
+
+    return Object.keys(firstRow).join(SEPARATOR);
+  }, [data]);
+
+  const columns = useMemo<ColumnDef<Person>[]>(() => {
+    if (!columnsString) return [];
+
+    return columnsString.split(SEPARATOR).map((accessorKey) => ({
+      header: accessorKey,
+      accessorKey,
+      size: accessorKey === "email" ? 300 : 200,
+    }));
+  }, [columnsString]);
+
+  useEffect(() => {
+    if (columnsString) {
+      setColumns(columnsString.split(SEPARATOR));
+    } else {
+      setColumns([]);
+    }
+  }, [columnsString, setColumns]);
 
   //flatten the array of arrays from the useInfiniteQuery hook
   const flatData = useMemo(
@@ -137,7 +152,7 @@ export default function TableContainer() {
   }
 
   return (
-    <Box className="w-full">
+    <Box className="w-full p-4">
       <div
         onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
         ref={tableContainerRef}

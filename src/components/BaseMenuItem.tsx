@@ -1,5 +1,5 @@
 import { type BaseData } from "@/store/reducers/baseSlice";
-import { setSelectedBase, setSelectedTable } from "@/store/reducers/menuSlice";
+import { setSelectedBase } from "@/store/reducers/menuSlice";
 import { MenuItem, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
