@@ -36,7 +36,7 @@ export function generatePerson(): Person {
   };
 }
 
-const TIMEOUT = 600;
+const TIMEOUT = 150;
 
 // use fakerjs to generate table
 const table_1 = Array.from({ length: 100 }, generatePerson);
@@ -47,7 +47,7 @@ const table_3 = Array.from({ length: 100 }, generatePerson);
 const bases = [
   {
     id: "1",
-    name: "Base 1",
+    name: "Customer Portal",
     tables: ["1", "2"],
   },
   {
@@ -157,7 +157,6 @@ export function applyFilter(data: Person[], filter: Filter): Person[] {
 }
 
 export async function fetchTableData(id: string, offset: number, limit: number, sorting?: SortingState, filter?: Filter) {
-  console.log('fetchTableData', id, offset, limit, sorting, filter);
   return new Promise<PersonApiResponse>((resolve) => {
     setTimeout(() => {
       const data = id === "1" ? table_1 : id === "2" ? table_2 : table_3;

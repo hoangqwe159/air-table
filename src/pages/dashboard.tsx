@@ -4,6 +4,8 @@ import { Box } from "@mui/material";
 import TableContainer from "@/components/TableContainer";
 import { TableProvider } from "@/context/TableContext";
 import TableActionMenu from "@/components/TableActionMenu";
+import TableViewMenu from "@/components/TableViewMenu";
+
 
 export default function Dashboard() {
   return (
@@ -15,6 +17,7 @@ export default function Dashboard() {
           <TableActionMenu />
         </div>
         <TableContainer />
+        <TableViewMenu />
       </Box>
     </TableProvider>
   );

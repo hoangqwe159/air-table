@@ -21,6 +21,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectSelectedTable } from "@/store/reducers/menuSlice";
 import { useSnackbar } from "notistack";
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 
 export default function TableActionMenu() {
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(
@@ -29,7 +30,7 @@ export default function TableActionMenu() {
   const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
   const selectedTableId = useSelector(selectSelectedTable);
   const queryClient = useQueryClient();
-  const { columns, sortingState, filterState } = useTableContext();
+  const { columns, sortingState, filterState, setViews } = useTableContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -211,6 +212,35 @@ export default function TableActionMenu() {
     canFailMutate(Array.from({ length: 100 }, generatePerson));
   }, [canFailMutate]);
 
+  const [open, setOpen] = useState(false);
+  const [viewName, setViewName] = useState("");
+  const handleClickSaveView = useCallback(() => {
+    if (!selectedTableId) return;
+    const viewData = {
+      sortingState,
+      filterState,
+    };
+
+    const key = `air-table-view-${selectedTableId}-${viewName}`;
+
+    setViews((prevViews) => {
+      const newViews = {
+        ...prevViews,
+        [key]: viewData,
+      }
+
+      return newViews;
+    });
+  }, [filterState, selectedTableId, setViews, sortingState, viewName]);
+
+  const handleCloseView = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleSaveView = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   if (!columns?.length) {
     return <>Loading...</>;
   }
@@ -229,6 +259,9 @@ export default function TableActionMenu() {
         </Button>
         <Button variant="outlined" onClick={handleClickAddRowsCanFail}>
           {canFailPending ? "Adding rows..." : "Add 100 rows (can fail)"}
+        </Button>
+        <Button variant="contained" onClick={handleSaveView}>
+          Save view
         </Button>
       </Box>
       <Menu
@@ -251,6 +284,27 @@ export default function TableActionMenu() {
       >
         <SortMenu onClose={handleCloseSort} />
       </Menu>
+      <Dialog open={open} onClose={handleCloseView}>
+        <DialogTitle>Save View</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="View Name"
+            fullWidth
+            value={viewName}
+            onChange={(e) => setViewName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClickSaveView} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

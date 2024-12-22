@@ -1,4 +1,3 @@
-// filepath: /Users/hoangqwe159/viet-trinoor/air-table/src/context/TableContext.tsx
 import React, {
   createContext,
   useContext,
@@ -8,6 +7,12 @@ import React, {
 } from "react";
 import { type SortingState } from "@tanstack/react-table";
 import { type Filter } from "@/utils/mock";
+import { EMPTY_LIST, EMPTY_OBJECT } from "@/utils/utils";
+
+type Views = Record<string, {
+  sortingState: SortingState;
+  filterState: Filter;
+}>;
 
 type TableContextType = {
   sortingState: SortingState;
@@ -16,18 +21,21 @@ type TableContextType = {
   setFilterState: React.Dispatch<React.SetStateAction<Filter>>;
   columns: string[];
   setColumns: React.Dispatch<React.SetStateAction<string[]>>;
+  views: Views;
+  setViews: React.Dispatch<React.SetStateAction<Views>>;
 };
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider = ({ children }: { children: ReactNode }) => {
-  const [sortingState, setSortingState] = useState<SortingState>([]);
-  const [filterState, setFilterState] = useState<Filter>([]);
-  const [columns, setColumns] = useState<string[]>([]);
+  const [sortingState, setSortingState] = useState<SortingState>(EMPTY_LIST);
+  const [filterState, setFilterState] = useState<Filter>(EMPTY_LIST);
+  const [columns, setColumns] = useState<string[]>(EMPTY_LIST);
+  const [views, setViews] = useState<Views>(EMPTY_OBJECT);
 
   const value = useMemo(
-    () => ({ sortingState, setSortingState, filterState, setFilterState, columns, setColumns }),
-    [sortingState, setSortingState, filterState, setFilterState, columns, setColumns],
+    () => ({ sortingState, setSortingState, filterState, setFilterState, columns, setColumns, views, setViews }),
+    [sortingState, filterState, columns, views],
   );
 
   return (
