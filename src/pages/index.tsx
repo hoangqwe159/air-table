@@ -7,11 +7,9 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import AppleIcon from "@mui/icons-material/Apple";
-import { useSnackbar } from "notistack";
-import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export default function Home() {
@@ -45,26 +43,14 @@ export default function Home() {
     }),
     [],
   );
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const onClickUnsupportedLogin = useCallback(() => {
-    enqueueSnackbar("Unsupported login method", {
-      variant: "error",
-    });
-  }, [enqueueSnackbar]);
-
   const router = useRouter();
-  const { status } = useSession();
-  const onClickLogin = useCallback(async () => {
-    await signIn("google");
-  }, []);
+  const onClickUnsupportedLogin = useCallback(() => {
+    void router.push("/dashboard");
+  }, [router]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      void router.push("/dashboard");
-    }
-  }, [status, router]);
+  const onClickLogin = useCallback(async () => {
+    void router.push("/dashboard");
+  }, [router]);
 
   return (
     <Box sx={screenSx} className="flex min-h-screen flex-col">

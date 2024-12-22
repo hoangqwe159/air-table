@@ -1,16 +1,12 @@
 import { type AppType, type AppProps } from "next/app";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { SessionProvider } from "next-auth/react";
 import MuiThemeProvider from "@/providers/MuiThemeProvider";
 import SnackBarProvider from "@/providers/SnackBarProvider";
 import { AppCacheProvider } from "@mui/material-nextjs/v14-pagesRouter";
 import Head from "next/head";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import { store } from "@/store/store";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "@/styles/globals.css";
 
@@ -28,18 +24,16 @@ const MyApp: AppType = (props: AppProps) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <StyledEngineProvider injectFirst>
-      <MuiThemeProvider>
-        <SnackBarProvider>
-          <SessionProvider>
-           <CssBaseline />
-           <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <Component {...pageProps} />
-            </QueryClientProvider>
-           </Provider>
-          </SessionProvider>
-        </SnackBarProvider>
-      </MuiThemeProvider>
+        <MuiThemeProvider>
+          <SnackBarProvider>
+            <CssBaseline />
+            <Provider store={store}>
+              <QueryClientProvider client={queryClient}>
+                <Component {...pageProps} />
+              </QueryClientProvider>
+            </Provider>
+          </SnackBarProvider>
+        </MuiThemeProvider>
       </StyledEngineProvider>
     </AppCacheProvider>
   );

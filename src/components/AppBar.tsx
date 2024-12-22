@@ -14,7 +14,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import HistoryIcon from "@mui/icons-material/History";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { useSession } from "next-auth/react";
 import { stringToColor } from "@/utils/utils";
 import { useBaseData } from "@/hooks/useBaseData";
 import { useSelector } from "react-redux";
@@ -60,8 +59,6 @@ const transformOrigin= { horizontal: 'right', vertical: 'top' } as const;
 const anchorOrigin= { horizontal: 'right', vertical: 'bottom' } as const;
 
 export default function AppBar() {
-  const { data } = useSession();
-
   const baseData = useSelector(selectBases);
   const selectedBaseId = useSelector(selectSelectedBase);
   const selectedBase = useMemo(() => {
@@ -86,11 +83,11 @@ export default function AppBar() {
 
   const avatarSx = useCallback((_theme: Theme) => {
     return {
-      background: stringToColor(data?.user?.name ?? "Unknown"),
+      background: stringToColor("Unknown"),
       width: 32,
       height: 32,
     };
-  }, [data]);
+  }, []);
 
   useBaseData();
 
@@ -172,7 +169,7 @@ export default function AppBar() {
             <Avatar
               sx={avatarSx}
             >
-              <Typography>{data?.user?.name?.charAt(0) ?? "U"}</Typography>
+              <Typography>{"U"}</Typography>
             </Avatar>
           </div>
         </Toolbar>
