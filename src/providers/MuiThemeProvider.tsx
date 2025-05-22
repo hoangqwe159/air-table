@@ -61,14 +61,14 @@ export const theme = responsiveFontSizes(
                     warning: createColor("#F49604"),
                     info: createColor("#4B9EFF"),
                     success: createColor("#A2E262"), 
-                    default: createColor("#808080"),
-                    paper: createColor("#FFFFFF"),
-                    primary: createColor("#2962FF"),
-                    secondary: createColor("#245A9E"),
-                    accent: createColor("#30363e"),
+                    default: createColor("#808080"), // updated
+                    paper: createColor("#FFFFFF"), // updated
+                    primary: createColor("#2962FF"), // updated
+                    secondary: createColor("#4B9EFF"), // updated
+                    accent: createColor("#e0e0e0"), // updated
                     background: {
-                        default: "#fafafa",
-                        paper: "#FFFFFF",
+                        default: "#f0f2f5", // updated
+                        paper: "#FFFFFF", // updated
                     },
                 }
             },
@@ -78,14 +78,14 @@ export const theme = responsiveFontSizes(
                     warning: createColor("#fdd08b"),
                     info: createColor("#aed3ff"),
                     success: createColor("#d5f2b8"),
-                    default: createColor("#f6f7f8"),
-                    paper: createColor("#FFFFFF"),
-                    primary: createColor("#5C87FF"),
-                    secondary: createColor("#3584E6"),
-                    accent: createColor("#f6f7f8"),
+                    default: createColor("#f6f7f8"), // updated
+                    paper: createColor("#1e1e1e"), // updated for dark theme paper
+                    primary: createColor("#5C87FF"), // updated
+                    secondary: createColor("#3584E6"), // updated
+                    accent: createColor("#30363e"), // updated
                     background: {
-                        default: "#05070D",
-                        paper: "#05070D",
+                        default: "#121212", // updated
+                        paper: "#1e1e1e", // updated
                     },
                 }
             }
